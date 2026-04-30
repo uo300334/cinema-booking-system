@@ -19,4 +19,13 @@ public class BookingService {
         }
         throw new RuntimeException("No seats");
     }
+
+    public Screening findScreeningById(String screeningId) {
+        for(Screening screening: db.getScreenings()){
+            if(screening.getId()==screeningId)
+                return screening;
+        }
+
+        return null;
+    }
 }

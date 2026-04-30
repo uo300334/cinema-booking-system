@@ -26,4 +26,16 @@ import static org.junit.jupiter.api.Assertions.*;
         assertEquals(200, response.getStatusCodeValue());
         assertTrue(response.getBody().contains("Occupancy Report"));
     }
+    @Test
+    public void testSelectScreeningSuccess() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/user/select-screen?screeningId=1", String.class);
+        assertEquals(200, response.getStatusCodeValue());
+        assertTrue(response.getBody().contains("You have selected"));
+    }
+    @Test
+    public void testSelectScreeningFailed() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/user/select-screen?screeningId=100", String.class);
+        assertEquals(200, response.getStatusCodeValue());
+        assertTrue(response.getBody().contains("Error: Screening ID not found."));
+    }
 }

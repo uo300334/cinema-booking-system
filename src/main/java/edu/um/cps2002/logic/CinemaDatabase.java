@@ -18,5 +18,12 @@ public class CinemaDatabase {
     }
 
     public List<Screening> getScreenings() { return screenings; }
+    public String getScreeningsString(){
+        String s = "";
+        for(Screening screen: screenings){
+            s+=" Id:"+screen.getId()+" Movie Title:"+screen.getMovieTitle()+" Available Seats:"+Integer.toString(
+                    screen.getAvailableSeats())+"%n";
+        }return s;
+    }
     public List<Booking> getBookings() { return bookings; }
 }
