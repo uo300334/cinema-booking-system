@@ -23,19 +23,19 @@ import static org.junit.jupiter.api.Assertions.*;
     @Test
     public void testAdminReportEndpoint() {
         ResponseEntity<String> response = restTemplate.getForEntity("/admin/report", String.class);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertTrue(response.getBody().contains("Occupancy Report"));
     }
     @Test
     public void testSelectScreeningSuccess() {
         ResponseEntity<String> response = restTemplate.getForEntity("/user/select-screen?screeningId=1", String.class);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertTrue(response.getBody().contains("You have selected"));
     }
     @Test
     public void testSelectScreeningFailed() {
         ResponseEntity<String> response = restTemplate.getForEntity("/user/select-screen?screeningId=100", String.class);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertTrue(response.getBody().contains("Error: Screening ID not found."));
     }
 }
