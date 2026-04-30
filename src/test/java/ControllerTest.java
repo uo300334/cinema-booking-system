@@ -1,0 +1,29 @@
+
+
+import edu.um.cps2002.logic.CinemaApplication;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest(classes = CinemaApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)public class ControllerTest {
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @Test
+    public void testUserScreeningsEndpoint() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/user/screenings", String.class);
+        assertEquals(200, response.getStatusCodeValue());
+        assertTrue(response.getBody().contains("movieTitle"));
+    }
+
+    @Test
+    public void testAdminReportEndpoint() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/admin/report", String.class);
+        assertEquals(200, response.getStatusCodeValue());
+        assertTrue(response.getBody().contains("Occupancy Report"));
+    }
+}
