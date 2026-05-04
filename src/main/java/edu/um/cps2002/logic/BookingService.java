@@ -1,5 +1,6 @@
 package edu.um.cps2002.logic;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class BookingService {
@@ -11,18 +12,14 @@ public class BookingService {
                 .findFirst()
                 .orElseThrow();
 
-        if (screening.getAvailableSeats() >= seats) {
-            screening.setAvailableSeats(screening.getAvailableSeats() - seats);
-            Booking booking = new Booking(UUID.randomUUID().toString(), name, screeningId, seats);
-            db.getBookings().add(booking);
-            return booking;
-        }
-        throw new RuntimeException("No seats");
+        Booking booking = new Booking(UUID.randomUUID().toString(), name, screening, seats);
+        db.getBookings().add(booking);
+        return booking;
     }
 
     public Screening findScreeningById(String screeningId) {
         for(Screening screening: db.getScreenings()){
-            if(screening.getId()==screeningId)
+            if(Objects.equals(screening.getId(), screeningId))
                 return screening;
         }
 

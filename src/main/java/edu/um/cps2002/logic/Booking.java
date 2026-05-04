@@ -5,13 +5,15 @@ package edu.um.cps2002.logic;
 public class Booking {
     private String bookingId;
     private String customerName;
-    private String screeningId;
+    private Screening screening;
     private int seats;
 
-    public Booking(String bookingId, String customerName, String screeningId, int seats) {
+    public Booking(String bookingId, String customerName, Screening screening, int seats) {
         this.bookingId = bookingId;
         this.customerName = customerName;
-        this.screeningId = screeningId;
+        this.screening  = screening;
         this.seats = seats;
+        screening.bookSeats(seats);
     }
+
 }

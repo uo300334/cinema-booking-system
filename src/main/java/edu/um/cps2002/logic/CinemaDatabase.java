@@ -26,4 +26,16 @@ public class CinemaDatabase {
         }return s;
     }
     public List<Booking> getBookings() { return bookings; }
+
+    public List<Screening> getAllScreenings() {
+        return screenings;
+    }
+
+    public Screening findScreeningById(String id) {
+        for(Screening screening:screenings){
+            if(screening.getId().equals(id))
+                return screening;
+        }
+        return null;
+    }
 }

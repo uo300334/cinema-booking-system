@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cinema Booking</title>
+    <style>
+        .screening-card { border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 5px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <nav>
+        <button onclick="showPage('user')">User Area</button>
+        <button onclick="showPage('admin')">Admin Area</button>
+    </nav>
+
+    <div id="user-section">
+        <h1>Available Screenings</h1>
+        <div id="screenings-list">Loading...</div>
+    </div>
+
+    <div id="admin-section" class="hidden">
+    <h1>Admin: Screening Management</h1>
+    
+    <!-- Create Form -->
+    <div style="background: #f9f9f9; padding: 15px; margin-bottom: 20px;">
+        <h3>Add New Screening</h3>
+        <input type="text" id="new-movie" placeholder="Movie Title">
+        <input type="text" id="new-id" placeholder="ID (e.g., S4)">
+        <input type="text" id="new-screen" placeholder="Screen Number">
+        <button onclick="createScreening()">Create</button>
+    </div>
+
+    <!-- Management List -->
+    <div id="admin-manage-list">
+        <!-- JS will inject screenings with Delete buttons here -->
+    </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
