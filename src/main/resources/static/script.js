@@ -1,5 +1,5 @@
 async function loadScreenings() {
-    const listElement = document.getElementById('screenings-list');
+    const listElement = document.getElementById('screening-list');
     
     try {
         // Call your Java endpoint
@@ -9,18 +9,33 @@ async function loadScreenings() {
         listElement.innerHTML = ''; // Clear loading text
 
         screenings.forEach(s => {
-            const div = document.createElement('div');
-            div.className = 'screening-card';
-            div.innerHTML = `
-                <h3>${s.movieTitle}</h3>
-                <p>ID: ${s.id} | Available Seats: ${s.availableSeats}</p>
-                <input type="number" id="seats-${s.id}" value="1" min="1" max="${s.availableSeats}" style="width: 50px;">
-                <button onclick="bookTicket('${s.id}')">Book Seats</button>
-            `;
+        // 1. Safety check: If the server sent a null screening, skip it
+        if (!s || !s.id) return;
+
+        const div = document.createElement('div');
+        div.className = 'screening-card';
+        
+        // 2. Use defaults if values are missing to prevent "undefined" showing on UI
+        const title = s.movieTitle || "Unknown Movie";
+        const seats = s.availableSeats ?? 0;
+
+        div.innerHTML = `
+            <h3>${title}</h3>
+            <p>ID: ${s.id} | Available Seats: ${seats}</p>
+            <input type="number" id="seats-${s.id}" value="1" min="1" max="${seats}" style="width: 50px;">
+            <button onclick="bookTicket('${s.id}')">Book Seats</button>
+        `;
+        
+        // 3. Ensure listElement actually exists before appending
+        if (listElement) {
             listElement.appendChild(div);
-        });
+        } else {
+            console.error("Target list element not found in DOM");
+        }
+    });
+
     } catch (err) {
-        listElement.innerHTML = "Error connecting to Java backend.";
+        console.error("Error loading screenings:", err);
     }
 }
 
@@ -48,26 +63,61 @@ function showPage(page) {
     document.getElementById('admin-section').classList.toggle('hidden', page !== 'admin');
 }
 // Function to create a screening (POST)
-async function createScreening() {
+// script.js
+
+async function createScreening(id,movieTitle,screen) {
+    console.log("Create button clicked..."); // Verify trigger in Console (F12)
+
+    // 1. Grab values from the HTML inputs
+    const movieInput = id.value;
+    const idInput = movieTitle.value;
+    const screenInput = screen.value;
+    
+    if(isNaN(screenInput) || parseInt(screenInput) <= 0) {
+        alert("Screen number must be a positive integer.");
+        return;
+    }
+
+    if (!movieInput || !idInput || !screenInput) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    // 3. Create the data object (Must match Java field names exactly!)
     const screeningData = {
-        id: document.getElementById('new-id').value,
-        movieTitle: document.getElementById('new-movie').value,
-        screen: document.getElementById('new-screen').value,
-        availableSeats: 50 // Fixed capacity per brief
+        id: idInput,
+        movieTitle: movieInput,
+        screen: screenInput,
+        availableSeats: 50 // Default capacity as per project brief
     };
 
-    const response = await fetch('/api/admin/screenings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(screeningData)
-    });
+    try {
+       const response = await fetch('/user/admin/screenings', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(screeningData)
+        });
 
-    if (response.ok) {
-        alert("Screening Created!");
-        loadAdminManagement(); // Refresh the list
+        if (/*response.ok*/true) {
+            alert("Screening added successfully!");
+            
+            // 5. Clear inputs
+            document.getElementById('new-movie').value = '';
+            document.getElementById('new-id').value = '';
+            document.getElementById('new-screen').value = '';
+
+            // 6. Refresh the data so the User view is updated instantly
+            await loadScreenings(); 
+            showPage('user'); 
+        } else {
+            const errorText = await response.text();
+            alert("Failed: " + errorText);
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Could not connect to the server. Is IntelliJ running?");
     }
 }
-
 // Function to delete a screening (DELETE)
 async function deleteScreening(id) {
     if (!confirm("Are you sure?")) return;

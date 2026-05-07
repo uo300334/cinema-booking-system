@@ -1,0 +1,28 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Pull the code from GitHub
+      - uses: actions/checkout@v4
+
+      # 2. Set up the Java environment (JDK 17 or 21 depending on your project)
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # 3. Compile and Test
+      # This command pulls dependencies, compiles, and runs your JUnit tests
+      - name: Build and Test with Maven
+        run: mvn -B package --file pom.xml

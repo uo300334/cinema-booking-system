@@ -30,7 +30,7 @@ public class Screening {
         this.availableSeats=availableSeats;
     }
     public void bookSeats(int bookingSeats) {
-        if(bookingSeats>availableSeats){
+        if(bookingSeats>availableSeats||bookingSeats<1){
             throw new IllegalArgumentException(/*"The number of seats to be reserved  cannot be greater than the available seats"*/);
         }else{
             setAvailableSeats(availableSeats-bookingSeats);

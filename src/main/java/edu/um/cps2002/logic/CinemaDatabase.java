@@ -38,4 +38,7 @@ public class CinemaDatabase {
         }
         return null;
     }
+    public void addScreening(Screening screening){
+        screenings.add(screening);
+    }
 }

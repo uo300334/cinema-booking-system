@@ -15,7 +15,7 @@
 
     <div id="user-section">
         <h1>Available Screenings</h1>
-        <div id="screenings-list">Loading...</div>
+        <div id="screening-list"></div>
     </div>
 
     <div id="admin-section" class="hidden">
@@ -27,7 +27,7 @@
         <input type="text" id="new-movie" placeholder="Movie Title">
         <input type="text" id="new-id" placeholder="ID (e.g., S4)">
         <input type="text" id="new-screen" placeholder="Screen Number">
-        <button onclick="createScreening()">Create</button>
+        <button onclick="createScreening(document.getElementById('new-id'), document.getElementById('new-movie'), document.getElementById('new-screen'))">Create</button>
     </div>
 
     <!-- Management List -->
