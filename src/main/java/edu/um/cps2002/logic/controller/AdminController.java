@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins = "*")
 public class AdminController {
     private BookingService bookingService = new BookingService();
     private ReportStrategy report = new OccupancyReport();
@@ -20,7 +21,7 @@ public class AdminController {
 
     // UserController.java
 
-    @PostMapping("/admin/screenings")
+    @PostMapping("/screenings")
     public ResponseEntity<?> createScreening(@RequestBody Screening newScreening) {
         try {
             // Validation: Ensure the ID isn't a duplicate
@@ -42,20 +43,23 @@ public class AdminController {
     }
 
     // UPDATE an existing screening
-    @PutMapping("/admin/screenings/{id}")
-    public String updateScreening(@PathVariable String id, @RequestBody Screening updatedData) {
+    @PutMapping("/screenings/{id}") // 👈 Ensure there isn't a duplicate "/admin/admin" segment here
+    @CrossOrigin(origins = "*")    // 👈 IMPORTANT FOR BROWSER PERMISSIONS
+    public ResponseEntity<String> updateScreening(@PathVariable String id, @RequestBody Screening updatedData) {
         Screening s = bookingService.findScreeningById(id);
         if (s != null) {
             s.setMovieTitle(updatedData.getMovieTitle());
             s.setScreenNumber(updatedData.getScreenNumber());
             s.setSeats(updatedData.getSeats());
-            return "Updated successfully";
+            return ResponseEntity.ok("Updated successfully"); // Standardize with a proper wrapper response status
         }
-        return "Error: Screening not found";
+        return ResponseEntity.status(404).body("Error: Screening not found");
     }
 
     // DELETE a screening
-    @DeleteMapping("/admin/screenings/{id}")
+
+    @DeleteMapping("/screenings/{id}")
+    @CrossOrigin(origins = "*")
     public String deleteScreening(@PathVariable String id) {
         boolean removed = CinemaDatabase.getInstance().getAllScreenings()
                 .removeIf(s -> s.getId().equals(id));
