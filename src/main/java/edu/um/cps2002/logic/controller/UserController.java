@@ -21,6 +21,7 @@ public class UserController {
 
     @GetMapping("/book")
     public ResponseEntity<?> book(@RequestParam String id, @RequestParam int seats) {
+        // 1. Find the screening
         Screening screening = CinemaDatabase.getInstance().findScreeningById(id);
 
         if (screening == null) {
@@ -28,12 +29,12 @@ public class UserController {
         }
 
         try {
-            bookingService.createBooking("User", id, seats);
+            bookingService.createBooking("User", id,seats);
 
-            // 3. Return the updated screening so the UI can refresh
             return ResponseEntity.ok(screening);
 
         } catch (IllegalArgumentException e) {
+            // 5. Catch the error and return the string message instead
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
