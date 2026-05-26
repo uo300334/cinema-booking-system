@@ -62,24 +62,24 @@ function showPage(page) {
     document.getElementById('user-section').classList.toggle('hidden', page !== 'user');
     document.getElementById('admin-section').classList.toggle('hidden', page !== 'admin');
 }
-// Function to create a screening (POST)
-// script.js
 
-async function createScreening(id,movieTitle,screen) {
+// Function to create a screening (POST)
+async function createScreening(idElement, movieElement, screenElement) {
     console.log("Create button clicked..."); // Verify trigger in Console (F12)
 
-    // 1. Grab values from the HTML inputs
-    const movieInput = id.value;
-    const idInput = movieTitle.value;
-    const screenInput = screen.value;
+    // 1. Grab values from the HTML inputs - FIX: Correct parameter mapping
+    const idInput = idElement.value;           // ID value
+    const movieInput = movieElement.value;     // Movie title value
+    const screenInput = screenElement.value;   // Screen number value
     
-    if(isNaN(screenInput) || parseInt(screenInput) <= 0) {
-        alert("Screen number must be a positive integer.");
+    // 2. Validate inputs
+    if (!movieInput || !idInput || !screenInput) {
+        alert("Please fill in all fields.");
         return;
     }
 
-    if (!movieInput || !idInput || !screenInput) {
-        alert("Please fill in all fields.");
+    if (isNaN(screenInput) || parseInt(screenInput) <= 0) {
+        alert("Screen number must be a positive integer.");
         return;
     }
 
@@ -87,18 +87,23 @@ async function createScreening(id,movieTitle,screen) {
     const screeningData = {
         id: idInput,
         movieTitle: movieInput,
-        screen: screenInput,
-        availableSeats: 50 // Default capacity as per project brief
+        screenNumber: screenInput,     // FIX: Changed from "screen" to "screenNumber"
+        seats: 50                       // FIX: Changed from "availableSeats" to "seats" (sets initial capacity)
     };
 
+    console.log("Posting screening data:", screeningData); // Debug log
+
     try {
-       const response = await fetch('/user/admin/screenings', { 
+        // FIX: Changed endpoint from '/user/admin/screenings' to '/admin/screenings'
+        const response = await fetch('http://localhost:8080/admin/screenings', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(screeningData)
         });
 
-        if (/*response.ok*/true) {
+        console.log("Response status:", response.status); // Debug log
+
+        if (response.ok) {
             alert("Screening added successfully!");
             
             // 5. Clear inputs
@@ -115,31 +120,36 @@ async function createScreening(id,movieTitle,screen) {
         }
     } catch (error) {
         console.error("Fetch error:", error);
-        alert("Could not connect to the server. Is IntelliJ running?");
+        alert("Could not connect to the server. Is the Java backend running on port 8080?");
     }
 }
+
 // Function to delete a screening (DELETE)
 async function deleteScreening(id) {
     if (!confirm("Are you sure?")) return;
 
-    const response = await fetch(`/api/admin/screenings/${id}`, {
+    const response = await fetch(`/admin/screenings/${id}`, {
         method: 'DELETE'
     });
 
     if (response.ok) {
-        loadAdminManagement();
+        alert("Screening deleted successfully!");
+        await loadAdminManagement();
+        await loadScreenings(); // Refresh user view too
+    } else {
+        alert("Failed to delete screening");
     }
 }
 
 // List screenings with Delete/Edit buttons
 async function loadAdminManagement() {
     const container = document.getElementById('admin-manage-list');
-    const response = await fetch('/api/screenings');
+    const response = await fetch('http://localhost:8080/api/screenings');
     const screenings = await response.json();
 
     container.innerHTML = screenings.map(s => `
         <div class="screening-card">
-            <strong>${s.movieTitle}</strong> (${s.id})
+            <strong>${s.movieTitle}</strong> (ID: ${s.id}) - Screen ${s.screenNumber}
             <button onclick="deleteScreening('${s.id}')" style="color:red">Delete</button>
         </div>
     `).join('');
@@ -147,3 +157,4 @@ async function loadAdminManagement() {
 
 // Initialize
 loadScreenings();
+loadAdminManagement();
