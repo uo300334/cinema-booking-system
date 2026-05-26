@@ -4,24 +4,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-
-
-//To execute the page of user enter into http://localhost:8080/user/screenings
+/**
+ * UserController - REST API endpoints for regular users
+ * 
+ * Handles screening listings and booking creation
+ */
 @RestController
-@RequestMapping("/api") // Changed to /api for best practice
-@CrossOrigin(origins = "*") // Allows VS Code to talk to your Java server
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class UserController {
     private BookingService bookingService = new BookingService();
 
+    /**
+     * Get all available screenings
+     */
     @GetMapping("/screenings")
     public List<Screening> listScreenings() {
-        // Return the actual List object, Spring will convert it to JSON
         return CinemaDatabase.getInstance().getAllScreenings();
     }
 
+    /**
+     * Book seats for a screening with a specific booking type
+     * 
+     * @param id Screening ID
+     * @param seats Number of seats
+     * @param bookingType Type of booking (STANDARD, STUDENT, SENIOR) - defaults to STANDARD
+     */
     @GetMapping("/book")
-    public ResponseEntity<?> book(@RequestParam String id, @RequestParam int seats) {
-        // 1. Find the screening
+    public ResponseEntity<?> book(@RequestParam String id, @RequestParam int seats, 
+                                   @RequestParam(defaultValue = "STANDARD") String bookingType) {
         Screening screening = CinemaDatabase.getInstance().findScreeningById(id);
 
         if (screening == null) {
@@ -29,12 +40,10 @@ public class UserController {
         }
 
         try {
-            bookingService.createBooking("User", id,seats);
-
-            return ResponseEntity.ok(screening);
+            Booking booking = bookingService.createBooking("User", id, seats, bookingType);
+            return ResponseEntity.ok(booking);
 
         } catch (IllegalArgumentException e) {
-            // 5. Catch the error and return the string message instead
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
