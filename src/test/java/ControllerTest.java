@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
     public void testSelectScreeningSuccess() {
         ResponseEntity<String> response = restTemplate.getForEntity("/user/select-screen?screeningId=1", String.class);
         assertEquals(200, response.getStatusCode().value());
-        assertTrue(response.getBody().contains("You have selected"));
+        assertTrue(response.getBody().contains("You have selected screening:"));
     }
     @Test
     public void testSelectScreeningFailed() {
