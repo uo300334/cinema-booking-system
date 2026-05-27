@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test suite for AdminController
  * Tests all admin operations: Create, Read, Update, Delete screenings and view reports
  */
+@SuppressWarnings("deprecation")
 public class AdminControllerTest {
     
     private AdminController adminController;
@@ -45,6 +46,7 @@ public class AdminControllerTest {
         ResponseEntity<?> response = adminController.createScreening(duplicate);
         
         assertEquals(400, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().toString().contains("already exists"));
     }
     
@@ -80,6 +82,7 @@ public class AdminControllerTest {
         ResponseEntity<?> response = adminController.viewReport();
         
         assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
         String report = response.getBody().toString();
         assertTrue(report.contains("Occupancy Report"));
     }
@@ -89,6 +92,7 @@ public class AdminControllerTest {
         ResponseEntity<?> response = adminController.viewReport();
         
         assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
         String report = response.getBody().toString();
         assertTrue(report.contains("Test Movie 1") || report.contains("Test Movie 2"));
     }
@@ -115,6 +119,7 @@ public class AdminControllerTest {
         ResponseEntity<String> response = adminController.updateScreening("999", updatedData);
         
         assertEquals(404, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("not found"));
     }
     
@@ -213,6 +218,7 @@ public class AdminControllerTest {
         ResponseEntity<?> response = adminController.viewReport();
         
         assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
         String report = response.getBody().toString();
         assertTrue(report.contains("Occupancy Report"));
     }

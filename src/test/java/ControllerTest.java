@@ -21,14 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
         assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("movieTitle"));
     }
-    /**
-    @Test
-    public void testAdminReportEndpoint() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/api/report", String.class);
-        assertEquals(404, response.getStatusCode().value());
-        assertNotNull(response.getBody());
-        assertTrue(response.getBody().contains("Admin: Screening Management"));
-    }**/
+
     @Test
     public void testSelectScreeningSuccess() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/select-screen?screeningId=1", String.class);
