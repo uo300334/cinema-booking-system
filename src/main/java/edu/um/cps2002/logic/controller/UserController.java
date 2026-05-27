@@ -8,15 +8,41 @@ import java.util.List;
 
 //To execute the page of user enter into http://localhost:8080/user/screenings
 @RestController
-@RequestMapping("/api") // Changed from /api to /user
+@RequestMapping("/user")
 @CrossOrigin(origins = "*") // Allows VS Code to talk to your Java server
 public class UserController {
     private BookingService bookingService = new BookingService();
 
     @GetMapping("/screenings")
-    public List<Screening> listScreenings() {
+    public ResponseEntity<?> listScreenings() {
         // Return the actual List object, Spring will convert it to JSON
-        return CinemaDatabase.getInstance().getAllScreenings();
+        try {
+            List<Screening> screenings = CinemaDatabase.getInstance().getAllScreenings();
+            return ResponseEntity.ok(screenings);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/select-screen")
+    public ResponseEntity<?> selectScreening(@RequestParam Long screeningId) {
+        try {
+            // Validate screeningId
+            if (screeningId == null || screeningId < 1) {
+                return ResponseEntity.badRequest().body("Error: Screening ID not found.");
+            }
+
+            // Find the screening
+            Screening screening = CinemaDatabase.getInstance().findScreeningById(String.valueOf(screeningId));
+            
+            if (screening == null) {
+                return ResponseEntity.badRequest().body("Error: Screening ID not found.");
+            }
+            
+            return ResponseEntity.ok("You have selected screening: " + screeningId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/book")
