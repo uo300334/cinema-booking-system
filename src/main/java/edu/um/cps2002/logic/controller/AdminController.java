@@ -51,6 +51,7 @@ public class AdminController {
             s.setMovieTitle(updatedData.getMovieTitle());
             s.setScreenNumber(updatedData.getScreenNumber());
             s.setSeats(updatedData.getSeats());
+            s.setAvailableSeats(updatedData.getSeats()); // Reset available seats to match new seat count
             return ResponseEntity.ok("Updated successfully"); // Standardize with a proper wrapper response status
         }
         return ResponseEntity.status(404).body("Error: Screening not found");
