@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
     @Test
     public void testUserScreeningsEndpoint() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/screenings", String.class);
-        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("movieTitle"));
     }
@@ -27,19 +27,19 @@ import static org.junit.jupiter.api.Assertions.*;
         ResponseEntity<String> response = restTemplate.getForEntity("/api/report", String.class);
         assertEquals(404, response.getStatusCode().value());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().contains("Occupancy Report"));
+        assertTrue(response.getBody().contains("Admin: Screening Management"));
     }
     @Test
     public void testSelectScreeningSuccess() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/select-screen?screeningId=1", String.class);
-        assertEquals(404, response.getStatusCode().value());
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("You have selected screening:"));
     }
     @Test
     public void testSelectScreeningFailed() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/select-screen?screeningId=100", String.class);
-        assertEquals(404, response.getStatusCode().value());
+        assertEquals(400, response.getStatusCode().value());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("Error: Screening ID not found."));
     }
