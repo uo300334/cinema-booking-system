@@ -26,7 +26,7 @@ public class Screening {
     public void setId(String id) { this.id = id; }
     public void setMovieTitle(String movieTitle) { this.movieTitle = movieTitle; }
     public void setScreenNumber(int screenNumber) { this.screenNumber = screenNumber; }
-    private void setAvailableSeats(int availableSeats) {
+    public void setAvailableSeats(int availableSeats) {
         this.availableSeats=availableSeats;
     }
     public void bookSeats(int bookingSeats) {
