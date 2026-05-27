@@ -34,8 +34,6 @@ public class BookingServiceTest {
         String screeningId = CinemaDatabase.getInstance().getScreenings().get(0).getId();
 
         // Act & Assert: Try to book 100 seats (limit is ~50) and expect an error
-        assertThrows(RuntimeException.class, () -> {
-            bookingService.createBooking("Too Many", screeningId, 100);
-        });
+        assertThrows(RuntimeException.class, () -> bookingService.createBooking("Too Many", screeningId, 100));
     }
 }
