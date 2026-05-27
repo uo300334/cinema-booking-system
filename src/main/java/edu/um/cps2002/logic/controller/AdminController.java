@@ -14,9 +14,13 @@ public class AdminController {
     private ReportStrategy report = new OccupancyReport();
 
     @GetMapping("/report")
-    public String viewReport() {
-        return report.generate(CinemaDatabase.getInstance().getScreenings());
-
+    public ResponseEntity<?> viewReport() {
+        try {
+            String reportContent = report.generate(CinemaDatabase.getInstance().getScreenings());
+            return ResponseEntity.ok(reportContent);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error generating report: " + e.getMessage());
+        }
     }
 
     // UserController.java
