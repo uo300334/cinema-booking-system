@@ -8,7 +8,7 @@ import java.util.List;
 
 //To execute the page of user enter into http://localhost:8080/user/screenings
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*") // Allows VS Code to talk to your Java server
 public class UserController {
     private BookingService bookingService = new BookingService();
