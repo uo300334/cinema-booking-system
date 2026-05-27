@@ -8,6 +8,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("deprecation")
 @SpringBootTest(classes = CinemaApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)public class ControllerTest {
 
     @Autowired
@@ -15,27 +16,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
     public void testUserScreeningsEndpoint() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/user/screenings", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/screenings", String.class);
         assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("movieTitle"));
     }
 
     @Test
     public void testAdminReportEndpoint() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/admin/report", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/report", String.class);
         assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("Occupancy Report"));
     }
     @Test
     public void testSelectScreeningSuccess() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/user/select-screen?screeningId=1", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/select-screen?screeningId=1", String.class);
         assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("You have selected screening:"));
     }
     @Test
     public void testSelectScreeningFailed() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/user/select-screen?screeningId=100", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/select-screen?screeningId=100", String.class);
         assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().contains("Error: Screening ID not found."));
     }
 }
